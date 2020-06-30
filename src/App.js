@@ -21,36 +21,26 @@ function App() {
       likes: 0,
     });
 
-    const repository = response.data;
-
-    setRepositories([...repositories, repository]);
+    setRepositories([...repositories, response.data]);
   }
 
   async function handleRemoveRepository(id) {
-    const response = await api.delete(`repositories/${id}`);
+    await api.delete(`repositories/${id}`);
 
-    api.get('repositories').then((response) => {
-      setRepositories(response.data);
-    });
+    setRepositories(repositories.filter((repository) => repository.id !== id));
   }
 
   return (
     <div>
       <ul data-testid='repository-list'>
-        <ul>
-          <li>
-            <ul>
-              {repositories.map((repository) => (
-                <li key={repository.id}>
-                  {repository.title}
-                  <button onClick={() => handleRemoveRepository(repository.id)}>
-                    Remover
-                  </button>
-                </li>
-              ))}
-            </ul>
+        {repositories.map((repository) => (
+          <li key={repository.id}>
+            {repository.title}
+            <button onClick={() => handleRemoveRepository(repository.id)}>
+              Remover
+            </button>
           </li>
-        </ul>
+        ))}
       </ul>
 
       <button onClick={handleAddRepository}>Adicionar</button>
